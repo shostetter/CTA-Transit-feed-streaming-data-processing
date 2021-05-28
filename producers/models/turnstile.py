@@ -40,7 +40,7 @@ class Turnstile(Producer):
     def run(self, timestamp, time_step):
         """Simulates riders entering through the turnstile."""
         num_entries = self.turnstile_hardware.get_entries(timestamp, time_step)
-        logger.info("turnstile kafka integration incomplete - skipping")
+#         logger.info("turnstile kafka integration incomplete - skipping")
         
         # for each entry send a message 
         for entry in range(num_entries):

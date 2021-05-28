@@ -72,10 +72,10 @@ async def stationevent(stations):
             lne='unknown'
         
         transformed = TransformedStation(
-            station_id: station.station_id,
-            station_name: station.station_name,
-            order: station.order,
-            line: lne
+            station_id=station.station_id,
+            station_name=station.station_name,
+            order=station.order,
+            line=lne
         )
         await out_topic.send(key=station.station_id, value=transformed)
         
