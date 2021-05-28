@@ -54,16 +54,30 @@ class Producer:
         p = AvroProducer(self.broker_properties,
                          default_key_schema = self.key_schema,
                          default_value_schema = self.value_schema)
-        
+    
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
-        #
-        #
-        # TODO: Write code that creates the topic for this producer if it does not already exist on
-        # the Kafka Broker.
-        #
-        #
-        logger.info("topic creation kafka integration incomplete - skipping")
+        
+        client = AdminClient({"bootstrap.servers": BROKER_URLS})
+        
+        # check if exists 
+        topic_meta = client.list_topics(timeout=5)
+        if not topic_meta.topics.get(topic_name) is not None:
+            new_topic = NewTopic(
+                topic=self.topic_name,
+                num_partitions=self.num_partitions,
+                replication_factor=num_replicas,
+            )
+            futures = client.create_topics([new_topic])
+
+    for topic, future in futures.items():
+        try:
+            future.result()
+            print("topic created")
+        except Exception as e:
+            print(f"failed to create topic {topic_name}: {e}")
+            raise
+        
 
     def time_millis(self):
         return int(round(time.time() * 1000))
