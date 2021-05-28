@@ -9,6 +9,8 @@ from confluent_kafka.avro import AvroProducer
 
 logger = logging.getLogger(__name__)
 
+BROKER_URLS = "PLAINTEXT://localhost:9092,PLAINTEXT://localhost:9093,PLAINTEXT://localhost:9094"
+SCHEMA_REGISTRY_URL = "http://localhost:8081"
 
 class Producer:
     """Defines and provides common functionality amongst Producers"""
@@ -38,10 +40,9 @@ class Producer:
         #
         #
         self.broker_properties = {
-            # add kafka host urls 
-            "bootstrap.servers": "PLAINTEXT://localhost:9092,PLAINTEXT://localhost:9093,PLAINTEXT://localhost:9094",
-            # add schema registry 
-            "schema.registry.url": "http://localhost:8081",
+            # add kafka host urls and schema registry 
+            "bootstrap.servers": BROKER_URLS,
+            "schema.registry.url": SCHEMA_REGISTRY_URL,
         }
 
         # If the topic does not already exist, try to create it
@@ -49,10 +50,11 @@ class Producer:
             self.create_topic()
             Producer.existing_topics.add(self.topic_name)
 
-        # TODO: Configure the AvroProducer
-        # self.producer = AvroProducer(
-        # )
-
+        # Configure the AvroProducer
+        p = AvroProducer(self.broker_properties,
+                         default_key_schema = self.key_schema,
+                         default_value_schema = self.value_schema)
+        
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
         #
