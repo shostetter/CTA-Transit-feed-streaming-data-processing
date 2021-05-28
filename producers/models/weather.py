@@ -32,7 +32,7 @@ class Weather(Producer):
     def __init__(self, month):
         topic_name = f"cta.weather"
         super().__init__(
-            topic_name
+            topic_name,
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
             num_partitions=1, 
@@ -67,37 +67,28 @@ class Weather(Producer):
     def run(self, month):
         self._set_weather(month)
 
-        #
-        #
-        # TODO: Complete the function by posting a weather event to REST Proxy. Make sure to
-        # specify the Avro schemas and verify that you are using the correct Content-Type header.
-        #
-        #
-        logger.info("weather kafka proxy integration incomplete - skipping")
-        #resp = requests.post(
-        #    #
-        #    #
-        #    # TODO: What URL should be POSTed to?
-        #    #
-        #    #
-        #    f"{Weather.rest_proxy_url}/TODO",
-        #    #
-        #    #
-        #    # TODO: What Headers need to bet set?
-        #    #
-        #    #
-        #    headers={"Content-Type": "TODO"},
-        #    data=json.dumps(
-        #        {
-        #            #
-        #            #
-        #            # TODO: Provide key schema, value schema, and records
-        #            #
-        #            #
-        #        }
-        #    ),
-        #)
-        #resp.raise_for_status()
+        resp = requests.post(
+           # TODO: What URL should be POSTed to?
+           f"{Weather.rest_proxy_url}/topics{self.topic_name}",
+           # TODO: What Headers need to bet set?
+           headers={"Content-Type": "application/vnd.kafka.avro.v2+json"},
+           data=json.dumps(
+               {
+                   # key_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
+                   "key_schema": json.dumps(Weather.key_schema), 
+                   # value_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
+                   "value_schema": json.dumps(Weather.key_schema), 
+                   # records – A list of records to produce to the topic.
+                   "records": [
+                       {
+                           "key": {"timestamp": self.time_millis()},
+                           "value": {"temperature": self.temp, "status":self.status}
+                       }
+                   ]
+               }
+           ),
+        )
+        resp.raise_for_status()
 
         logger.debug(
             "sent weather data to kafka, temp: %s, status: %s",
