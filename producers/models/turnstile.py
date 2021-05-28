@@ -41,11 +41,6 @@ class Turnstile(Producer):
         """Simulates riders entering through the turnstile."""
         num_entries = self.turnstile_hardware.get_entries(timestamp, time_step)
         logger.info("turnstile kafka integration incomplete - skipping")
-        #
-        #
-        # TODO: Complete this function by emitting a message to the turnstile topic for the number
-        # of entries that were calculated
-        #
         
         # for each entry send a message 
         for entry in range(num_entries):
@@ -54,7 +49,7 @@ class Turnstile(Producer):
                 key={"timestamp": self.time_millis()},
                 value={
                     "station_id":self.station.station_id,
-                    "station_name":self.station_name,
+                    "station_name":self.station.name,
                     "line":self.station.color.name
                 }
             )
