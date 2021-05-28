@@ -30,12 +30,11 @@ class Weather(Producer):
     summer_months = set((6, 7, 8))
 
     def __init__(self, month):
-        topic_name = f"cta.weather"
         super().__init__(
-            topic_name=topic_name,
+            topic_name =  "cta.weather",
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
-            num_partitions=1, 
+            num_partitions=1,
             num_replicas=1
         )
 
@@ -50,6 +49,7 @@ class Weather(Producer):
             with open(f"{Path(__file__).parents[0]}/schemas/weather_key.json") as f:
                 Weather.key_schema = json.load(f)
 
+        # Schema defined in `schemas/weather_value.json
         if Weather.value_schema is None:
             with open(f"{Path(__file__).parents[0]}/schemas/weather_value.json") as f:
                 Weather.value_schema = json.load(f)
@@ -66,29 +66,32 @@ class Weather(Producer):
 
     def run(self, month):
         self._set_weather(month)
+        
         resp = requests.post(
-           # TODO: What URL should be POSTed to?
-           f"{Weather.rest_proxy_url}/topics/{self.topic_name}",
-           # TODO: What Headers need to bet set?
-           headers={"Content-Type": "application/vnd.kafka.avro.v2+json"},
-           data=json.dumps(
-               {
-                   # key_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
-                   "key_schema": json.dumps(Weather.key_schema), 
-                   # value_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
-                   "value_schema": json.dumps(Weather.key_schema), 
-                   # records – A list of records to produce to the topic.
-                   "records": [
-                       {
-                           "key": {"timestamp": self.time_millis()},
-                           "value": {"temperature": self.temp, "status": self.status.name}
-                       }
-                   ]
-               }
-           ),
-        )
-        resp.raise_for_status()
-
+            # TODO: What URL should be POSTed to?
+            f"{Weather.rest_proxy_url}/topics/cta.weather", 
+            # TODO: What Headers need to bet set?
+            headers={"Content-Type":"application/vnd.kafka.avro.v2+json"},
+            data=json.dumps({
+                # key_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
+                "key_schema" : json.dumps(Weather.key_schema),
+                # value_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
+                "value_schema" : json.dumps(Weather.value_schema),
+                # records – A list of records to produce to the topic.
+                "records":[
+                    {
+                        "value":{"temperature" : self.temp,"status" : self.status.name}, 
+                        "key": {"timestamp" : self.time_millis()}
+                    }
+                ]
+            }),
+            )
+        
+        try:
+            resp.raise_for_status()
+        except:
+            logger.info(f"Failed to send data to REST Proxy {json.dumps(resp.json(), indent=2)}")
+        
         logger.debug(
             "sent weather data to kafka, temp: %s, status: %s",
             self.temp,
