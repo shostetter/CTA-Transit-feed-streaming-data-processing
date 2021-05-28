@@ -45,7 +45,7 @@ out_topic = app.topic(
 # TODO: Define a Faust Table
 table = app.Table(
    "stations.transformed.table",
-   default=int,
+   default=TransformedStation,
    partitions=1,
    changelog_topic=out_topic,
 )
@@ -77,7 +77,9 @@ async def stationevent(stations):
             order=station.order,
             line=lne
         )
-        await out_topic.send(key=station.station_id, value=transformed)
+#         print(transformed.__dict__)
+        table[transformed.station_id] = transformed
+        
         
 
 if __name__ == "__main__":
