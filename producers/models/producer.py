@@ -70,13 +70,13 @@ class Producer:
             )
             futures = client.create_topics([new_topic])
 
-    for topic, future in futures.items():
-        try:
-            future.result()
-            print("topic created")
-        except Exception as e:
-            print(f"failed to create topic {topic_name}: {e}")
-            raise
+            for topic, future in futures.items():
+                try:
+                    future.result()
+                    print("topic created")
+                except Exception as e:
+                    print(f"failed to create topic {topic_name}: {e}")
+                    raise
         
 
     def time_millis(self):
