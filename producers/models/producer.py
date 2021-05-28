@@ -24,7 +24,7 @@ class Producer:
         key_schema,
         value_schema=None,
         num_partitions=1,
-        num_replicas=1,
+        num_replicas=1
     ):
         """Initializes a Producer object with basic settings"""
         self.topic_name = topic_name
@@ -56,11 +56,11 @@ class Producer:
         
         # check if exists 
         topic_meta = client.list_topics(timeout=5)
-        if not topic_meta.topics.get(topic_name) is not None:
+        if not topic_meta.topics.get(self.topic_name) is not None:
             new_topic = NewTopic(
                 topic=self.topic_name,
                 num_partitions=self.num_partitions,
-                replication_factor=num_replicas,
+                replication_factor=self.num_replicas
             )
             futures = client.create_topics([new_topic])
 

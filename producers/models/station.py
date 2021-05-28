@@ -54,13 +54,13 @@ class Station(Producer):
            topic=self.topic_name,
            key={"timestamp": self.time_millis()},
            value={
-               "station_id"=self.station_id,
-               "train_id"=train.train_id, # from tain.py
-               "direction"=direction,
-               "line"=self.color, # this should be the line name
-               "train_status"=train.status, # from train.py
-               "prev_station_id"=prev_station_id,
-               "prev_direction"=prev_station_id
+               "station_id":self.station_id,
+               "train_id":train.train_id, # from tain.py
+               "direction":direction,
+               "line":self.color, # this should be the line name
+               "train_status":train.status, # from train.py
+               "prev_station_id":prev_station_id,
+               "prev_direction":prev_station_id
            },
         )
 

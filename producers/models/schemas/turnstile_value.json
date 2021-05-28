@@ -8,3 +8,12 @@
         {"name": "line", "type": "string"}
     ]
 }
+
+
+To run the producer:
+
+    cd producers
+    virtualenv venv
+    . venv/bin/activate
+    pip install -r requirements.txt
+    python simulation.py
