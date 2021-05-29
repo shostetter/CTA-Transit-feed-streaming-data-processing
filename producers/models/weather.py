@@ -31,7 +31,7 @@ class Weather(Producer):
 
     def __init__(self, month):
         super().__init__(
-            topic_name =  "cta.weather",
+            topic_name =  "org.chicago.cta.weather.v1",
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
             num_partitions=1,
@@ -69,7 +69,7 @@ class Weather(Producer):
         
         resp = requests.post(
             # TODO: What URL should be POSTed to?
-            f"{Weather.rest_proxy_url}/topics/cta.weather", 
+            f"{Weather.rest_proxy_url}/topics/org.chicago.cta.weather.v1", 
             # TODO: What Headers need to bet set?
             headers={"Content-Type":"application/vnd.kafka.avro.v2+json"},
             data=json.dumps({
