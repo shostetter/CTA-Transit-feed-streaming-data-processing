@@ -49,7 +49,7 @@ class Weather(Producer):
             with open(f"{Path(__file__).parents[0]}/schemas/weather_key.json") as f:
                 Weather.key_schema = json.load(f)
 
-        # Schema defined in `schemas/weather_value.json
+        # Schema defined in `schemas/weather_value.json`
         if Weather.value_schema is None:
             with open(f"{Path(__file__).parents[0]}/schemas/weather_value.json") as f:
                 Weather.value_schema = json.load(f)
@@ -68,9 +68,8 @@ class Weather(Producer):
         self._set_weather(month)
         
         resp = requests.post(
-            # TODO: What URL should be POSTed to?
             f"{Weather.rest_proxy_url}/topics/org.chicago.cta.weather.v1", 
-            # TODO: What Headers need to bet set?
+            # Set header for Avro
             headers={"Content-Type":"application/vnd.kafka.avro.v2+json"},
             data=json.dumps({
                 # key_schema Full schema encoded as a string (e.g. JSON serialized for Avro data)
