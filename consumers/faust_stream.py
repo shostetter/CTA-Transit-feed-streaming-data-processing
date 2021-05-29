@@ -35,7 +35,7 @@ app = faust.App("stations-stream", broker="kafka://localhost:9092", store="memor
 
 # TODO: Define the input Kafka Topic. Hint: What topic did Kafka Connect output to?
 # input topic 
-topic = app.topic("pg_stations_stations", value_type=Station)
+topic = app.topic("org.chicago.cta.stations.table.v1", value_type=Station) # pg_stations_stations
 
 # TODO: Define the output Kafka Topic
 out_topic = app.topic(
