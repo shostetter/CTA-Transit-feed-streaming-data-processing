@@ -46,6 +46,8 @@ class Turnstile(Producer):
         for entry in range(num_entries):
             self.producer.produce(
                 topic=self.topic_name,
+                key_schema = self.key_schema,
+                value_schema = self.value_schema,
                 key={"timestamp": self.time_millis()},
                 value={
                     "station_id":self.station.station_id,
