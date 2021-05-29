@@ -67,7 +67,7 @@ class Producer:
             for topic, future in futures.items():
                 try:
                     future.result()
-                    print("topic created")
+                    print("{topic} topic created")
                 except Exception as e:
                     print(f"failed to create topic {topic_name}: {e}")
                     raise
