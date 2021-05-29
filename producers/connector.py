@@ -46,7 +46,7 @@ def configure_connector():
                "table.whitelist": "stations",
                "mode": "incrementing",
                "incrementing.column.name": "stop_id",
-               "topic.prefix": "pg_stations_",
+               "topic.prefix": "org.chicago.cta.",
                "poll.interval.ms": "300000" # set to 5 min (default is 5000 ms)
            }
        }),
