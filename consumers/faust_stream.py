@@ -62,11 +62,11 @@ table = app.Table(
 @app.agent(topic)
 async def stationevent(stations):
     async for station in stations:
-        if station.red:
+        if station.red is True:
             lne = 'red'
-        if station.blue:
+        if station.blue is True:
             lne='blue'
-        if station.green:
+        if station.green is True:
             lne='green'
         else:
             lne='unknown'
@@ -77,8 +77,8 @@ async def stationevent(stations):
             order=station.order,
             line=lne
         )
-#         print(transformed.__dict__)
-        table[transformed.station_id] = transformed
+#         table[transformed.station_id] = transformed
+        await out_topic.send(value=transformed)
         
         
 

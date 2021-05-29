@@ -39,7 +39,7 @@ class KafkaConsumer:
         #
         #
         self.broker_properties = {
-            "bootstrap.servers": BROKER_URLS,
+            "bootstrap.servers": 'localhost:9092',
             'default.topic.config': {'auto.offset.reset': 'earliest'},
             'group.id': f'group.{topic_name_pattern}'
         }
@@ -64,7 +64,7 @@ class KafkaConsumer:
         """Callback for when topic assignment takes place"""
         # TODO: If the topic is configured to use `offset_earliest` set the partition offset to
         # the beginning or earliest
-        logger.info("on_assign is incomplete - skipping")
+#         logger.info("on_assign is incomplete - skipping")
         for partition in partitions:
             partition.offset = confluent_kafka.OFFSET_BEGINNING
 
@@ -88,7 +88,7 @@ class KafkaConsumer:
         # is retrieved.
         #
         
-        message = self.consumer.poll(self.consume_timeout)
+        message = self.consumer.poll(1.0)
         if message is None:
             logger.info("No message received by consumer.")
             return 0

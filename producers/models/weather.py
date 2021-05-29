@@ -80,8 +80,8 @@ class Weather(Producer):
                 # records – A list of records to produce to the topic.
                 "records":[
                     {
-                        "value":{"temperature" : self.temp,"status" : self.status.name}, 
-                        "key": {"timestamp" : self.time_millis()}
+                        "value":{"temperature": self.temp, "status": self.status.name}, 
+                        "key": {"timestamp": self.time_millis()}
                     }
                 ]
             }),
